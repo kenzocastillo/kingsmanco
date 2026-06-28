@@ -1,8 +1,8 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { getUserId } from "./cart";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { getUserId } from "../auth/helpers";
 
 export const createOrder = async () => {
   const userId = await getUserId();

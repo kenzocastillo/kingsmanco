@@ -1,10 +1,10 @@
 "use server";
-import SigninButton from "./SigninButton";
-import { auth } from "../../lib/auth";
-import LogoutButton from "./LogoutButton";
 import Image from "next/image";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
+import { signIn, signOut } from "next-auth/react";
+import { auth } from "../../auth/config/auth";
+import { SignInButton, SignOutButton } from "../ui/AuthButton";
 
 const Navbar = async () => {
   let cartCount = 0;
@@ -29,48 +29,62 @@ const Navbar = async () => {
       {/* Nav Links */}
       <div className="flex gap-5 text-2xl cursor-pointer">
         <Link href="/">
-          <li>Home</li>
+          <ul>
+            <li>Home</li>
+          </ul>
         </Link>
         <Link href="/products">
-          <li>Shop</li>
+          <ul>
+            <li>Shop</li>
+          </ul>
         </Link>
         <Link href="/contact">
-          <li>Contact</li>
+          <ul>
+            <li>Contact</li>
+          </ul>
         </Link>
         {/* Protected Routes (Session Dependen  t) */}
         {session?.user?.name ? (
           <>
             <Link href="/orders">
-              <li> My Orders </li>
+              <ul>
+                <li> My Orders </li>
+              </ul>
             </Link>
             {/* Cart */}
             <Link href="/cart">
-              <li className="relative">
-                <span>🛒</span>
-                <span className="absolute -top-2 -right-2 text-sm">
-                  {cartCount}
-                </span>
-              </li>
+              <ul>
+                <li className="relative">
+                  <span>🛒</span>
+                  <span className="absolute -top-2 -right-2 text-sm">
+                    {cartCount}
+                  </span>
+                </li>
+              </ul>
             </Link>
             {/* User's Name */}
-            <li className="flex gap-3">Hi {session.user.name}</li>
+            <ul>
+              <li className="flex gap-3">Hi {session.user.name}</li>
+            </ul>
             {/* Logout Button */}
-            <li>
-              <div className="flex">
-                <Image
-                  src={session?.user?.image ?? ""}
-                  alt={session?.user?.name ?? "User"}
-                  width={32}
-                  height={32}
-                  className="rounded-full"
-                />
-                <LogoutButton />
-              </div>
-            </li>
+            <ul>
+              <li>
+                <div className="flex">
+                  <Image
+                    src={session?.user?.image ?? ""}
+                    alt={session?.user?.name ?? "User"}
+                    width={32}
+                    height={32}
+                    className="rounded-full"
+                  />
+                  <SignOutButton />
+                </div>
+              </li>
+            </ul>
             {/* End of Protected Routes (Session Dependent) */}
           </>
         ) : (
-          <SigninButton />
+          <SignInButton />
         )}
       </div>
     </div>

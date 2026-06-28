@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useEffect, useRef, useState, useCallback } from "react";
-import { loadOrders } from "@/app/actions/order";
+import { loadOrders } from "../actions";
 type OrderWithItems = Awaited<ReturnType<typeof loadOrders>>["orders"][number];
 export default function OrdersList({ userId }: { userId: string }) {
   const [orders, setOrders] = useState<OrderWithItems[]>([]);
@@ -10,15 +10,22 @@ export default function OrdersList({ userId }: { userId: string }) {
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const hasFetched = useRef(false);
+  const loadingRef = useRef(false);
+
   const fetchMore = useCallback(async () => {
-    if (loading || !hasMore) return;
+    if (loadingRef.current || !hasMore) return;
+    loadingRef.current = true;
     setLoading(true);
+
     const { orders: newOrders, nextCursor } = await loadOrders(userId, cursor);
     setOrders((prev) => [...prev, ...newOrders]);
     setCursor(nextCursor ?? undefined);
     setHasMore(nextCursor !== null);
+
+    loadingRef.current = false;
     setLoading(false);
-  }, [cursor, hasMore, loading, userId]);
+  }, [cursor, hasMore, userId]);
+
   useEffect(() => {
     if (hasFetched.current) return;
     hasFetched.current = true;

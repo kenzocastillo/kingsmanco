@@ -9,7 +9,6 @@ export const {
   callbacks: {
     async signIn({ user }) {
       if (!user?.email) return false;
-
       try {
         await prisma.user.upsert({
           where: { email: user.email },

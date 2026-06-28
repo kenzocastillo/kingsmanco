@@ -1,8 +1,8 @@
 import { ProductProps } from "@/app/types/types";
 import Image from "next/image";
-import { addToCart } from "@/app/actions/cart";
-import CartSuccessBox from "./cart/CartSuccessBox";
 import { useState } from "react";
+import { addToCart } from "../../cart/actions";
+import CartSuccessBox from "../../cart/components/CartSuccessBox";
 
 const ProductItem = ({ product }: ProductProps) => {
   const [isAddedCart, setIsAddedCart] = useState(false);

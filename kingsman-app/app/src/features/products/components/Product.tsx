@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import { loadProducts } from "@/app/actions/product";
 import ProductItem from "./ProductItem";
+import { loadProducts } from "../actions";
 
 type ProductWithItems = Awaited<
   ReturnType<typeof loadProducts>
@@ -15,9 +15,11 @@ export default function Product() {
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const hasFetched = useRef(false);
+  const loadingRef = useRef(false);
 
   const fetchMore = useCallback(async () => {
-    if (loading || !hasMore) return;
+    if (loadingRef.current || !hasMore) return;
+    loadingRef.current = true;
     setLoading(true);
 
     const { products: newProducts, nextCursor } = await loadProducts(cursor);
@@ -25,14 +27,14 @@ export default function Product() {
     setProducts((prev) => [...prev, ...newProducts]);
     setCursor(nextCursor ?? undefined);
     setHasMore(nextCursor !== null);
+    loadingRef.current = false;
     setLoading(false);
-  }, [cursor, hasMore, loading]);
+  }, [cursor, hasMore]);
 
   useEffect(() => {
     if (hasFetched.current) return;
     hasFetched.current = true;
     fetchMore();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchMore]);
 
   useEffect(() => {

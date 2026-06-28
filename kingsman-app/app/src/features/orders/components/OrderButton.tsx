@@ -1,5 +1,6 @@
 "use client";
-import { createOrder } from "@/app/actions/order";
+
+import { createOrder } from "../actions";
 
 const OrderButton = () => {
   const onOrderButtonClick = () => {

@@ -1,4 +1,4 @@
-import Product from "../components/ui/Product";
+import Product from "../src/features/products/components/Product";
 
 const page = () => {
   return (

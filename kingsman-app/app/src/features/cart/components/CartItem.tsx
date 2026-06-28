@@ -1,8 +1,8 @@
 "use client";
-import { deleteCartItem } from "@/app/actions/cart";
 import { CartItemProps } from "@/app/types/types";
 import Image from "next/image";
 import React from "react";
+import { deleteCartItem } from "../actions";
 
 const CartItem = ({ product, quantity, id }: CartItemProps) => {
   return (

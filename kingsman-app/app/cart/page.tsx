@@ -1,8 +1,8 @@
 "use server";
 
 import Image from "next/image";
-import { getCart } from "../actions/cart";
-import OrderButton from "../components/ui/OrderButton";
+import { getCart } from "../src/features/cart/actions";
+import OrderButton from "../src/features/orders/components/OrderButton";
 
 export default async function Page() {
   const cart = await getCart();

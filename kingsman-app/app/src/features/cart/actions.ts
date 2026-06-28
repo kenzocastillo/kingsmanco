@@ -1,14 +1,7 @@
 "use server";
 import prisma from "@/lib/prisma";
-import { auth } from "../lib/auth";
 import { revalidatePath } from "next/cache";
-
-// helper function to get user id
-export const getUserId = async () => {
-  const session = await auth();
-  if (!session?.user?.id) throw new Error("Unauthorized");
-  return session.user.id;
-};
+import { getUserId } from "../auth/helpers";
 
 // when add to cart is clicked
 export const addToCart = async (productId: string, quantity: number = 1) => {
@@ -21,16 +14,17 @@ export const addToCart = async (productId: string, quantity: number = 1) => {
   });
 
   // Check if item being add to cart already exists in the cart, if exists , add quantity only, if not, create a new cartItem.
-  const existingCart = await prisma.cartItem.findFirst({
+  const cartExists = await prisma.cartItem.findFirst({
     where: {
       productId,
+      id: userId,
     },
   });
 
-  if (existingCart) {
+  if (cartExists) {
     await prisma.cartItem.update({
-      where: { id: existingCart.id },
-      data: { quantity: existingCart.quantity + quantity },
+      where: { id: cartExists.id },
+      data: { quantity: cartExists.quantity + quantity },
     });
   } else {
     await prisma.cartItem.create({

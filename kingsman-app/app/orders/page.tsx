@@ -1,5 +1,5 @@
-import { getUserId } from "../actions/cart";
-import OrdersList from "../components/ui/order/OrdersList";
+import { getUserId } from "../src/features/auth/helpers";
+import OrdersList from "../src/features/orders/components/OrdersList";
 
 export default async function Page() {
   const userId = await getUserId();

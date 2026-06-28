@@ -103,6 +103,7 @@ async function main() {
     ],
     skipDuplicates: false,
   });
+
   console.log("Seed data inserted successfully.");
 }
 
