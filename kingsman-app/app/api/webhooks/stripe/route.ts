@@ -34,14 +34,25 @@ export async function POST(req: Request) {
       const order = await prisma.order.update({
         where: { id: orderId },
         data: { status: "PAID" },
+        include: {
+          orderItems: true,
+        },
       });
+
+      for (const item of order.orderItems) {
+        await prisma.product.update({
+          where: { id: item.productId },
+          data: {
+            quantity: {
+              decrement: item.quantity,
+            },
+          },
+        });
+      }
 
       // Delete the cart once payment is OK
       await prisma.cartItem.deleteMany({
         where: { cart: { userId: order.userId } },
-      });
-      await prisma.cart.delete({
-        where: { userId: order.userId },
       });
 
       revalidatePath("/", "layout");
