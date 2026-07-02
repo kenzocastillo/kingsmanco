@@ -1,17 +1,13 @@
 "use server";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { getUserId } from "../auth/helpers";
 
 export const createOrder = async () => {
   const userId = await getUserId();
 
-  // check if cart has items
   const cart = await prisma.cart.findUnique({
-    where: {
-      userId,
-    },
+    where: { userId },
     include: {
       items: {
         include: { product: true },
@@ -20,11 +16,12 @@ export const createOrder = async () => {
   });
 
   if (!cart || cart.items.length === 0)
-    throw new Error("There are no Items in the Cart ");
+    throw new Error("There are no Items in the Cart");
 
   const orderCreate = await prisma.order.create({
     data: {
       userId,
+      status: "PENDING",
       orderItems: {
         create: cart.items.map((item) => ({
           productId: item.productId,
@@ -35,39 +32,27 @@ export const createOrder = async () => {
     },
   });
 
-  // get orderItem, getProductId, Map inside, then reduce the product depending on quantity of OrderItem.
-  const orderItem = await prisma.orderItem.findMany({
-    where: { orderId: orderCreate.id },
-    include: { product: true },
-  });
-
-  // loop through each order item ,
-  for (const item of orderItem) {
+  // Decrement product quantity
+  for (const item of cart.items) {
     await prisma.product.update({
       where: { id: item.productId },
       data: {
-        quantity: {
-          decrement: item.quantity,
-        },
+        quantity: { decrement: item.quantity },
       },
     });
-    console.log(item);
   }
 
-  if (orderCreate) {
-    await prisma.cartItem.deleteMany({
-      where: { cartId: userId },
-    });
-    await prisma.cart.delete({
-      where: { userId },
-    });
-  } else {
-    throw new Error("Problem with creating order");
-  }
+  return orderCreate;
+};
 
-  revalidatePath("/", "layout");
-  revalidatePath("/products", "layout");
-  redirect("/orders");
+export const loadOrder = async (orderId: string) => {
+  const order = await prisma.order.findFirst({
+    where: { id: orderId },
+    include: {
+      orderItems: { include: { product: true }, distinct: ["productId"] },
+    },
+  });
+  return order;
 };
 
 export const loadOrders = async (

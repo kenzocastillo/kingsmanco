@@ -14,17 +14,17 @@ export const addToCart = async (productId: string, quantity: number = 1) => {
   });
 
   // Check if item being add to cart already exists in the cart, if exists , add quantity only, if not, create a new cartItem.
-  const cartExists = await prisma.cartItem.findFirst({
+  const cartItem = await prisma.cartItem.findFirst({
     where: {
       productId,
       id: userId,
     },
   });
 
-  if (cartExists) {
+  if (cartItem) {
     await prisma.cartItem.update({
-      where: { id: cartExists.id },
-      data: { quantity: cartExists.quantity + quantity },
+      where: { id: cartItem.id },
+      data: { quantity: cartItem.quantity + quantity },
     });
   } else {
     await prisma.cartItem.create({

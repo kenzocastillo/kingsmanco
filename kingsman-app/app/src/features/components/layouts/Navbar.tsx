@@ -2,7 +2,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
-import { signIn, signOut } from "next-auth/react";
 import { auth } from "../../auth/config/auth";
 import { SignInButton, SignOutButton } from "../ui/AuthButton";
 

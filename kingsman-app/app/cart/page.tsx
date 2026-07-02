@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { getCart } from "../src/features/cart/actions";
-import OrderButton from "../src/features/orders/components/OrderButton";
+import CheckoutButton from "../src/features/cart/components/CheckoutButton";
 
 export default async function Page() {
   const cart = await getCart();
@@ -105,7 +105,7 @@ export default async function Page() {
             <span className="font-medium tracking-wide">₱{total}</span>
           </div>
 
-          <OrderButton />
+          <CheckoutButton cartItems={cart.items} />
 
           <p className="text-xs text-gray-400 tracking-wide text-center">
             Taxes and shipping calculated at checkout.

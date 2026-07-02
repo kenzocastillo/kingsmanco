@@ -14,6 +14,10 @@ export type CartItem = {
   product: Product;
 };
 
+export type CheckoutButtonProps = {
+  cartItems: CartItem[];
+};
+
 export type ProductProps = {
   product: Product;
 };
@@ -35,3 +39,7 @@ export type CartItemProps = {
 export type OrderButtonProps = {
   cartItems: CartItem[];
 };
+
+export interface OrderItemProps {
+  params: Promise<{ orderId: string }>;
+}
