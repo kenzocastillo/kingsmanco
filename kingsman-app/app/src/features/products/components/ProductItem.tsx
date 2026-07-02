@@ -1,64 +1,66 @@
+"use client";
+
 import { ProductProps } from "@/app/types/types";
 import Image from "next/image";
-import { useState } from "react";
-import { addToCart } from "../../cart/actions";
-import CartSuccessBox from "../../cart/components/CartSuccessBox";
+import { useProductItem } from "../hooks/useProductItem";
 
 const ProductItem = ({ product }: ProductProps) => {
-  const [isAddedCart, setIsAddedCart] = useState(false);
-  const setCartVisibility = () => {
-    setIsAddedCart(true);
-    setTimeout(() => {
-      setIsAddedCart(false);
-    }, 1000);
-  };
-
+  const { handleAddToCart, isAdded } = useProductItem(product);
   return (
-    <div className="group relative flex flex-col gap-4">
-      {/* IMAGE CONTAINER */}
-      <div className="relative overflow-hidden bg-gray-100 aspect-[3/4]">
+    <div className="group flex flex-col gap-4 transition-transform duration-300 hover:-translate-y-1">
+      {/* IMAGE */}
+      <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
         <Image
           src={product.image ?? ""}
           alt={product.name}
           fill
-          className="object-cover transition duration-700 group-hover:scale-105"
+          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
         />
 
-        {/* HOVER OVERLAY */}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition duration-500" />
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/5" />
 
-        {/* QUICK ACTION */}
-        <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition duration-500">
+        {/* Button */}
+        <div className="absolute inset-x-0 bottom-0 translate-y-full transition-transform duration-300 group-hover:translate-y-0">
           <button
-            className={`w-full  bg-black ${product.quantity < 1 && "line-through opacity-80"} text-white py-3 text-sm tracking-widest uppercase`}
-            onClick={() => {
-              addToCart(product.id);
-              setCartVisibility();
-            }}
-            disabled={product.quantity < 1}
+            onClick={handleAddToCart}
+            disabled={product.quantity < 1 || isAdded}
+            className={`w-full py-3 text-sm uppercase tracking-[0.2em] transition-all duration-300
+              ${
+                product.quantity < 1
+                  ? "cursor-not-allowed bg-neutral-300 text-neutral-500 line-through"
+                  : isAdded
+                    ? "bg-amber-600 text-white"
+                    : "bg-black text-white"
+              }`}
           >
-            Add to Cart
+            {product.quantity < 1
+              ? "Sold Out"
+              : isAdded
+                ? "✓ Added"
+                : "Add to Cart"}
           </button>
         </div>
-        {isAddedCart && <CartSuccessBox />}
       </div>
 
-      {/* TEXT */}
-      <div className="flex flex-col gap-1 px-1">
-        <p className="text-sm tracking-wide">{product.name}</p>
+      {/* Product Info */}
+      <div className="px-1">
+        <p className="text-sm uppercase tracking-[0.15em] text-neutral-900">
+          {product.name}
+        </p>
 
-        <div className="flex justify-between items-center">
-          <p className="text-sm font-medium">₱{product.price}</p>
+        <div className="mt-2 flex items-center justify-between">
+          <p className="font-medium tracking-wide">${product.price}</p>
 
-          {product.quantity > 0 ? (
-            <span className="text-xs text-gray-400 tracking-wider">
-              In Stock
-            </span>
-          ) : (
-            <span className="text-xs text-gray-300 tracking-wider line-through">
-              Sold Out
-            </span>
-          )}
+          <span
+            className={`text-xs uppercase tracking-[0.15em] ${
+              product.quantity > 0
+                ? "text-neutral-400"
+                : "text-neutral-300 line-through"
+            }`}
+          >
+            {product.quantity > 0 ? "In Stock" : "Sold Out"}
+          </span>
         </div>
       </div>
     </div>

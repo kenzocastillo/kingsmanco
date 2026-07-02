@@ -14,7 +14,7 @@ export async function handleCheckout(cartItems: Product[]) {
       price_data: {
         currency: "php",
         product_data: { name: item.name },
-        unit_amount: item.price * 1000,
+        unit_amount: item.price * 100,
       },
       quantity: item.quantity,
     })),

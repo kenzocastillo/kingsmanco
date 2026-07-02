@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Navbar from "./src/features/components/layouts/Navbar";
 import "./globals.css";
+import Providers from "./src/providers/SessionProvider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -22,7 +23,7 @@ export default function RootLayout({
         className={`${inter.variable} suppressHydrationWarning  antialiased m-0 p-0`}
       >
         <Navbar />
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
