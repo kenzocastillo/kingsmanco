@@ -2,6 +2,7 @@ import Stripe from "stripe";
 import { headers } from "next/headers";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { OrderStatus } from "@/app/generated/prisma/enums";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -33,7 +34,7 @@ export async function POST(req: Request) {
       // Update order status
       const order = await prisma.order.update({
         where: { id: orderId },
-        data: { status: "PAID" },
+        data: { status: OrderStatus.PAID },
         include: {
           orderItems: true,
         },

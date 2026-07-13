@@ -9,7 +9,7 @@ const ProductItem = ({ product }: ProductProps) => {
   return (
     <div className="group flex flex-col gap-4 transition-transform duration-300 hover:-translate-y-1">
       {/* IMAGE */}
-      <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
+      <div className="relative aspect-3/4 overflow-hidden bg-gray-100">
         <Image
           src={product.image ?? ""}
           alt={product.name}
@@ -21,7 +21,7 @@ const ProductItem = ({ product }: ProductProps) => {
         <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/5" />
 
         {/* Button */}
-        <div className="absolute inset-x-0 bottom-0 translate-y-full transition-transform duration-300 group-hover:translate-y-0">
+        <div className="absolute inset-x-0 bottom-0 translate-y-0 sm:translate-y-full transition-transform duration-300 sm:group-hover:translate-y-0">
           <button
             onClick={handleAddToCart}
             disabled={product.quantity < 1 || isAdded}

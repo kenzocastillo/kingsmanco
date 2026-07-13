@@ -1,6 +1,6 @@
 import Product from "../src/features/products/components/Product";
 
-const page = () => {
+const ProductPage = () => {
   return (
     <div>
       <Product />
@@ -8,4 +8,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default ProductPage;

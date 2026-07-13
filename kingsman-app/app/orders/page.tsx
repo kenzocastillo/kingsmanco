@@ -1,7 +1,7 @@
 import { getUserId } from "../src/features/auth/helpers";
 import OrdersList from "../src/features/orders/components/OrdersList";
 
-export default async function Page() {
+export default async function OrdersPage() {
   const userId = await getUserId();
 
   return (
