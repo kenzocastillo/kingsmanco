@@ -7,6 +7,7 @@ import prisma from "@/lib/prisma";
 
 import { auth } from "../../auth/config/auth";
 import { SignInButton, SignOutButton } from "../ui/AuthButton";
+import MobileMenu from "./MobileMenu";
 
 const Navbar = async () => {
   let cartCount = 0;
@@ -29,15 +30,15 @@ const Navbar = async () => {
 
   return (
     <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white/90 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
+      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6">
         {/* Logo */}
         <Link href="/">
-          <h1 className="text-2xl font-light tracking-[0.35em] uppercase transition hover:opacity-70">
+          <h1 className="text-lg font-light uppercase tracking-[0.3em] transition hover:opacity-70 sm:text-2xl">
             Kingsman Co.
           </h1>
         </Link>
 
-        {/* Desktop Navigation */}
+        {/* ================= Desktop Navigation ================= */}
         <nav className="hidden items-center gap-10 text-sm uppercase tracking-[0.18em] md:flex">
           <Link href="/" className="transition hover:text-neutral-500">
             Home
@@ -58,8 +59,8 @@ const Navbar = async () => {
           )}
         </nav>
 
-        {/* Right Side */}
-        <div className="flex items-center gap-5">
+        {/* ================= Desktop Right Side ================= */}
+        <div className="hidden items-center gap-5 md:flex">
           {session ? (
             <>
               <Link
@@ -88,9 +89,9 @@ const Navbar = async () => {
                 )}
               </Link>
 
-              <div className="hidden items-center gap-3 md:flex">
+              <div className="flex items-center gap-3">
                 <Image
-                  src={session?.user?.image ?? ""}
+                  src={session?.user?.image ?? "/default-avatar.png"}
                   alt={session?.user?.name ?? "User"}
                   width={36}
                   height={36}
@@ -111,6 +112,11 @@ const Navbar = async () => {
           ) : (
             <SignInButton />
           )}
+        </div>
+
+        {/* ================= Mobile Only ================= */}
+        <div className="md:hidden">
+          <MobileMenu session={session} cartCount={cartCount} />
         </div>
       </div>
     </header>
